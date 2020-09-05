@@ -3,7 +3,10 @@
 )
 
 (defn get-all-days [year mon day]
-  (apply vector (map #(j/as % :day-of-month) (take-while #(= (j/month %) (j/month mon)) (j/iterate j/plus (j/adjust (j/local-date year mon 1) :first-in-month day)  (j/days 7)))))
+  (apply vector 
+    (map #(j/as % :day-of-month) 
+      (take-while #(= (j/month %) (j/month mon)) 
+        (j/iterate j/plus (j/adjust (j/local-date year mon) :first-in-month day) (j/days 7)))))
 )
 
 ; (defn get-all-days [mon year day]
@@ -18,12 +21,12 @@
 (defn get-date [month year day which]
   (let [all-days (get-all-days year month day)]
     (case which
-      :first first
-      :second second 
-      :third #(nth % 2)
-      :fourth #(nth % 3)
-      :last last
-      :teenth (first (filter #(<= 13 % 19) %)))
+      :first (first all-days)
+      :second (second all-days)
+      :third (nth all-days 2)
+      :fourth (nth all-days 3)
+      :last (last all-days)
+      :teenth (first (filter #(<= 13 % 19) all-days)))
   )
 )
 
